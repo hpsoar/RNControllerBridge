@@ -15,7 +15,6 @@
 @property (nonatomic, strong) RNNavigationStyle *naviStyle;
 @property (nonatomic, strong) RNNavigationContext *context;
 @property (nonatomic, strong) RCTRootView *rn_rootView;
-@property (nonatomic, strong) NSString *rn_controllerId;
 @end
 
 @implementation RNViewController

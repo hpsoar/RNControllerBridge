@@ -21,6 +21,8 @@
 
 @interface RNNavigationContext : NSObject
 
+@property (nonatomic, copy) NSString *controllerId;
+
 @property (nonatomic) BOOL isNativeComponent; // default NO;
 @property (nonatomic, copy) NSString *component;
 @property (nonatomic, copy) NSDictionary *passProps;

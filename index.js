@@ -45,34 +45,31 @@ var NativeBridge = {
           c.controller_id = this.id;
           return c;
        },
-       naviAction: function(action, context, animated) {
-          try {
-            const pushedControllerId = action(this.contextWithId(context), animated);
-            console.log(controllerId);
-          } catch(e) {
-            console.error(e);
-          }
+       naviAction: async function(action, context, animated) {
+         action(this.contextWithId(context), animated, function(controllerId) {
+           console.log(controllerId);
+         });
        },
        push: function(context, animated) {
          this.naviAction(RNNavigator.push, context, animated);
        },
-       pop: function(aimated) {
+       pop: function(animated) {
          this.naviAction(RNNavigator.pop, {}, animated);
        },
        popToRoot: function(animated) {
          this.naviAction(RNNavigator.popToRoot, {}, animated);
        },
-       resetRoot: function(context, animated) {
-         this.naviAction(RNNavigator.resetRoot, {}, animated);
+       setNaviRoot: function(context, animated) {
+         this.naviAction(RNNavigator.setRoot, context, animated);
        },
-       resetTop: function(context, animated) {
-         this.naviAction(RNNavigator.resetTop, {}, animated);
-       }
+       setNaviTop: function(context, animated) {
+         this.naviAction(RNNavigator.setTop, context, animated);
+       },
        present: function(context, animated) {
          this.naviAction(RNNavigator.present, context, animated);
        },
        dismiss: function(animated) {
-         this.naviAction(RNNavigator.dismiss, context, animated);
+         this.naviAction(RNNavigator.dismiss, {}, animated);
        },
 
       setLeftButtons: function (buttons, animated = false) {
@@ -98,5 +95,5 @@ var NativeBridge = {
    }
 }
 
-module.exports = Controllers;
+module.exports = NativeBridge;
 

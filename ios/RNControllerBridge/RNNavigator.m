@@ -9,6 +9,10 @@
 #import "RNNavigator.h"
 #import "RNViewController.h"
 #import <MJExtension.h>
+#import "RNControllerManager.h"
+
+typedef void (^RNTransitionCompletionBlock) (UIViewController *vc);
+typedef void (^RNTransitionBlock) (RNTransitionCompletionBlock completion);
 
 @implementation RNViewControllerFinder
 
@@ -84,6 +88,11 @@ static id<RNViewControllerFactory> navigatorControllerFactory = nil;
     navigatorControllerFactory = controlerFactory;
 }
 
+- (UIViewController *)activeController:(NSString *)controllerId {
+    UIViewController *vc = [[RNControllerManager sharedManager] findController:controllerId];
+    return vc ?: [[self controllerFinder] topViewController];
+}
+
 - (UIViewController *)controllerWithContext:(NSDictionary *)context {
     return [self controllerWithContext:context callback:nil];
 }
@@ -114,57 +123,105 @@ RCT_EXPORT_MODULE()
     return dispatch_get_main_queue();
 }
 
-// This is an exported method that is available in JS.
-RCT_EXPORT_METHOD(pop:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
-    [[self topVC].navigationController popViewControllerAnimated:YES];
-}
-
-RCT_EXPORT_METHOD(push:(NSDictionary *)context animated:(BOOL)animated callback:(RCTResponseSenderBlock)callback) {
-    UIViewController *vc = [self controllerWithContext:context callback:callback];
-    if (vc) {
-        [[self topVC].navigationController pushViewController:vc animated:animated];
+static void didFinishTransitionTo(UIViewController *to, RCTResponseSenderBlock callback) {
+    if (to) {
+        NSString *controllerId = nil;
+        if ([to isKindOfClass:[RNViewController class]]) {
+            controllerId = [(RNViewController *)to rn_controllerId];
+        }
+        callback(@[ controllerId ?: @"" ]);
+    }
+    else {
+        callback(@[]);
     }
 }
 
-RCT_EXPORT_METHOD(dismiss:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
-    [[self topVC] dismissViewControllerAnimated:animated completion:^{
+RCT_EXPORT_METHOD(push:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *to = [self controllerWithContext:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    
+    if (to && from.navigationController) {
+        [from.navigationController pushViewController:to animated:animated];
+        didFinishTransitionTo(to, completion);
+    }
+    else {
+        NSLog(@"%@, %@, %@", to, from, from.navigationController);
+        didFinishTransitionTo(nil,  completion);
+    }
+}
+
+RCT_EXPORT_METHOD(present:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *to = [self controllerWithContext:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    
+    if (from && to) {
+        [from presentViewController:to animated:animated completion:^{
+            didFinishTransitionTo(to, completion);
+        }];
+    }
+    else {
+        NSLog(@"%@, %@, %@", to, from);
+        didFinishTransitionTo(nil, completion);
+    }
+}
+
+// This is an exported method that is available in JS.
+RCT_EXPORT_METHOD(pop:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    [from.navigationController popViewControllerAnimated:animated];
+}
+
+RCT_EXPORT_METHOD(dismiss:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    [from dismissViewControllerAnimated:animated completion:^{
         if (completion) {
             completion(@[]);
         }
     }];
 }
 
-RCT_EXPORT_METHOD(present:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion callback:(RCTResponseSenderBlock)callback) {
-    UIViewController *vc = [self controllerWithContext:context callback:callback];
-    if (vc) {
-        [[self topVC] presentViewController:vc animated:animated completion:^{
-            if (completion) {
-                completion(@[]);
-            }
-        }];
-    }
+RCT_EXPORT_METHOD(popToRoot:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    [from.navigationController popToRootViewControllerAnimated:animated];
 }
 
-RCT_EXPORT_METHOD(popToRoot:(BOOL)animated) {
-    [[self topVC].navigationController popToRootViewControllerAnimated:animated];
-}
-
-RCT_EXPORT_METHOD(setTop:(NSDictionary *)context animated:(BOOL)animated) {
-    UIViewController *vc = [self controllerWithContext:context];
-    if (vc) {
-        UINavigationController *nav = [self topVC].navigationController;
+RCT_EXPORT_METHOD(setTop:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    UIViewController *to = [self controllerWithContext:context];
+    if (from.navigationController && to) {
+        UINavigationController *nav = from.navigationController;
         NSMutableArray *vcs = [nav.viewControllers mutableCopy];
         if (vcs.count > 0) {
-            vcs[vcs.count - 1] = vc;
+            vcs[vcs.count - 1] = to;
             [nav setViewControllers:vcs animated:animated];
         }
+        else {
+            [nav setViewControllers:@[to] animated:animated];
+        }
+        didFinishTransitionTo(to, completion);
+    }
+    else {
+        didFinishTransitionTo(nil, completion);
     }
 }
 
-RCT_EXPORT_METHOD(setRoot:(NSDictionary *)context animated:(BOOL)animated) {
-    UIViewController *vc = [self controllerWithContext:context];
-    if (vc) {
-        [[self topVC].navigationController setViewControllers:@[vc] animated:animated];
+RCT_EXPORT_METHOD(setRoot:(NSDictionary *)context animated:(BOOL)animated completion:(RCTResponseSenderBlock)completion) {
+    RNNavigationContext *naviContext = [RNNavigationContext mj_objectWithKeyValues:context];
+    UIViewController *from = [self activeController:naviContext.controllerId];
+    UIViewController *to = [self controllerWithContext:context];
+    if (from.navigationController && to) {
+        UINavigationController *nav = from.navigationController;
+        [nav setViewControllers:@[to] animated:animated];
+        didFinishTransitionTo(to, completion);
+    }
+    else {
+        didFinishTransitionTo(nil, completion);
     }
 }
 

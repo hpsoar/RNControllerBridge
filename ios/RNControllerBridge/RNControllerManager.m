@@ -43,6 +43,10 @@ static NSMutableDictionary* NICreateNonRetainingMutableDictionary(void) {
     [_controllerMap removeObjectForKey:controllerId];
 }
 
+- (UIViewController *)findController:(NSString *)controllerId {
+    return _controllerMap[controllerId];
+}
+
 - (NSString *)generateControllerId {
     @synchronized (self) {
         static NSInteger seed = 0;

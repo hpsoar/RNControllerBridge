@@ -13,4 +13,6 @@
 
 - (instancetype)initWithContext:(RNNavigationContext *)context bridge:(RCTBridge *)bridge;
 
+@property (nonatomic, strong) NSString *rn_controllerId;
+
 @end
