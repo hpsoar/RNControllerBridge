@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12D643921D365EEF000E75DA /* RNControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 12D643911D365EEF000E75DA /* RNControllerManager.m */; };
 		12F92AC61D362BE200F21E9B /* RNControllerBridge.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12F92AC51D362BE200F21E9B /* RNControllerBridge.h */; };
 		12F92AC81D362BE200F21E9B /* RNControllerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F92AC71D362BE200F21E9B /* RNControllerBridge.m */; };
 		12F92AD21D362F3000F21E9B /* RNNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F92ACF1D362F3000F21E9B /* RNNavigator.m */; };
@@ -27,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		12D643901D365EEF000E75DA /* RNControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNControllerManager.h; sourceTree = "<group>"; };
+		12D643911D365EEF000E75DA /* RNControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNControllerManager.m; sourceTree = "<group>"; };
 		12F92AC21D362BE200F21E9B /* libRNControllerBridge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNControllerBridge.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F92AC51D362BE200F21E9B /* RNControllerBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNControllerBridge.h; sourceTree = "<group>"; };
 		12F92AC71D362BE200F21E9B /* RNControllerBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNControllerBridge.m; sourceTree = "<group>"; };
@@ -76,6 +79,8 @@
 				12F92AD11D362F3000F21E9B /* RNViewController.m */,
 				12F92AC51D362BE200F21E9B /* RNControllerBridge.h */,
 				12F92AC71D362BE200F21E9B /* RNControllerBridge.m */,
+				12D643901D365EEF000E75DA /* RNControllerManager.h */,
+				12D643911D365EEF000E75DA /* RNControllerManager.m */,
 			);
 			path = RNControllerBridge;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 				12F92AC81D362BE200F21E9B /* RNControllerBridge.m in Sources */,
 				12F92AD21D362F3000F21E9B /* RNNavigator.m in Sources */,
 				12F92AD31D362F3000F21E9B /* RNViewController.m in Sources */,
+				12D643921D365EEF000E75DA /* RNControllerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

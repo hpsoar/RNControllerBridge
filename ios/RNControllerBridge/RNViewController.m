@@ -8,12 +8,14 @@
 
 #import "RNViewController.h"
 #import <RCTRootView.h>
+#import "RNControllerManager.h"
 
 @interface RNViewController ()
 @property (nonatomic) BOOL navigationBarWasHidden;
 @property (nonatomic, strong) RNNavigationStyle *naviStyle;
 @property (nonatomic, strong) RNNavigationContext *context;
-@property (nonatomic, strong) RCTRootView *rootView;
+@property (nonatomic, strong) RCTRootView *rn_rootView;
+@property (nonatomic, strong) NSString *rn_controllerId;
 @end
 
 @implementation RNViewController
@@ -23,11 +25,20 @@
         self.context = context;
         self.naviStyle = context.style;
         
-        self.rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                 moduleName:self.context.component
-                                          initialProperties:self.context.passProps];
+        self.rn_controllerId = [[RNControllerManager sharedManager] registerController:self];
+        
+        NSMutableDictionary *passProps = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.rn_controllerId, @"rn_controllerId", nil];
+        [passProps addEntriesFromDictionary:self.context.passProps];
+        
+        self.rn_rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                                    moduleName:self.context.component
+                                             initialProperties:passProps];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[RNControllerManager sharedManager] unregisterController:self];
 }
 
 - (void)viewDidLoad {
@@ -38,10 +49,10 @@
     }
     
     // We want this view to take up the entire screen.
-    self.rootView.frame = self.view.frame;
-    self.rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.rn_rootView.frame = self.view.frame;
+    self.rn_rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
-    [self.view addSubview:self.rootView];
+    [self.view addSubview:self.rn_rootView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
