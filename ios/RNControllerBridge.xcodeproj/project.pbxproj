@@ -11,7 +11,6 @@
 		12F92AC81D362BE200F21E9B /* RNControllerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F92AC71D362BE200F21E9B /* RNControllerBridge.m */; };
 		12F92AD21D362F3000F21E9B /* RNNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F92ACF1D362F3000F21E9B /* RNNavigator.m */; };
 		12F92AD31D362F3000F21E9B /* RNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F92AD11D362F3000F21E9B /* RNViewController.m */; };
-		EF610EDF7A39969D53EEF95D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91707B35F1D72574EBD18BA5 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,7 +34,6 @@
 		12F92ACF1D362F3000F21E9B /* RNNavigator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNavigator.m; sourceTree = "<group>"; };
 		12F92AD01D362F3000F21E9B /* RNViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNViewController.h; sourceTree = "<group>"; };
 		12F92AD11D362F3000F21E9B /* RNViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNViewController.m; sourceTree = "<group>"; };
-		91707B35F1D72574EBD18BA5 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD3E6A59979EB34F64C89A0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F9845E89E76E495961079E0B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,7 +43,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF610EDF7A39969D53EEF95D /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +83,6 @@
 		4ED3D3215EB29B9B468DF66F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				91707B35F1D72574EBD18BA5 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
