@@ -1,0 +1,22 @@
+{
+  "name": "react-native-test-module",
+  "version": "1.0.0",
+  "description": "'hello'",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpsoar/RNControllerBridge.git"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": "huangpeng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hpsoar/RNControllerBridge/issues"
+  },
+  "homepage": "https://github.com/hpsoar/RNControllerBridge#readme"
+}
